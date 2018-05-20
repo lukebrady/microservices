@@ -1,10 +1,13 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 // AddServer maintains server state for all handlers.
@@ -42,12 +45,28 @@ func (a *AddServer) RootHandler(w http.ResponseWriter, r *http.Request) {
 		a.GET++
 		a.requests++
 		// Write OK status.
-		w.WriteHeader(http.StatusOK)
+		// w.WriteHeader(http.StatusOK)
 		w.Write([]byte("{\"Server\":\"Addition\"}"))
 	} else if r.Method == "POST" {
-
+		// Create sum variable that will be returned.
+		var sum int
+		// Increment POST and total requests.
+		a.POST++
+		a.requests++
+		// Read the data from the request body.
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			w.WriteHeader(503)
+		}
+		data := new(AddRequest)
+		json.Unmarshal(body, data)
+		for _, value := range data.Nums {
+			sum += value
+		}
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(strconv.Itoa(sum) + "\n"))
 	}
-	log.Printf(" %s", r.Header)
+	log.Printf("%s\n", r.Header)
 	// Print server stats after each request.
 	fmt.Printf("GET Requests to /: %d\n", a.GET)
 	fmt.Printf("POST Requests to /: %d\n", a.POST)
