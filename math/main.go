@@ -31,7 +31,7 @@ func NewMathServer(addr string) *MathServer {
 func (m *MathServer) AddHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		// Send a post to the addition microservice with the request.
-		resp, err := http.Post("localhost:8090", "text/json", r.Body)
+		resp, err := http.Post("http://localhost:8090", "text/json", r.Body)
 		if err != nil {
 			w.WriteHeader(resp.StatusCode)
 		}
