@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+    <body>
+        <h1>Test AJAX Server</h1>
+        <p id = "testData"></p>
+        <p id = "testData2"></p>
+        <button onclick="loadData()">Get Date</button>
+    </body>
+    <script>
+        
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if(this.readyState == 4 && this.status == 200) {
+                    document.getElementById("testData").innerHTML = this.responseText;
+                }
+            };
+            xhttp.open("GET", "/test", true);
+            xhttp.send(null);
+        function loadData() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if(this.readyState == 4 && this.status == 200) {
+                    document.getElementById("testData2").innerHTML = this.responseText;
+                }
+            };
+            xhttp.open("GET", "http://localhost:8081/test2", true);
+            xhttp.setRequestHeader("Access-Token","yobro123");
+            xhttp.send(null);
+        }
+    </script>
+</html>
